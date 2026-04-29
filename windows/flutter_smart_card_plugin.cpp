@@ -43,12 +43,19 @@ void FlutterSmartCardPlugin::RegisterWithRegistrar(
 FlutterSmartCardPlugin::FlutterSmartCardPlugin() {}
 
 FlutterSmartCardPlugin::~FlutterSmartCardPlugin() {
+  ReleaseContext();
+}
+
+void FlutterSmartCardPlugin::ReleaseContext() {
   if (hCard_) {
     SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
+    hCard_ = 0;
   }
   if (hContext_) {
     SCardReleaseContext(hContext_);
+    hContext_ = 0;
   }
+  dwProtocol_ = 0;
 }
 
 void FlutterSmartCardPlugin::HandleMethodCall(
@@ -86,6 +93,8 @@ void FlutterSmartCardPlugin::HandleMethodCall(
     Transmit(apdu, std::move(result));
   } else if (method_call.method_name() == "disconnect") {
     Disconnect(std::move(result));
+  } else if (method_call.method_name() == "dispose") {
+    Dispose(std::move(result));
   } else {
     result->NotImplemented();
   }
@@ -192,6 +201,12 @@ void FlutterSmartCardPlugin::Disconnect(
     SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
     hCard_ = 0;
   }
+  result->Success(flutter::EncodableValue());
+}
+
+void FlutterSmartCardPlugin::Dispose(
+    std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
+  ReleaseContext();
   result->Success(flutter::EncodableValue());
 }
 

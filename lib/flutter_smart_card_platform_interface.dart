@@ -32,4 +32,8 @@ abstract class FlutterSmartCardPlatform extends PlatformInterface {
   Future<void> disconnect() {
     throw UnimplementedError('disconnect() has not been implemented.');
   }
+
+  Future<void> dispose() {
+    throw UnimplementedError('dispose() has not been implemented.');
+  }
 }

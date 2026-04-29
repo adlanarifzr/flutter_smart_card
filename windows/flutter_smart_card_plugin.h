@@ -33,6 +33,11 @@ class FlutterSmartCardPlugin : public flutter::Plugin {
   void Connect(const std::string& reader, std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
   void Transmit(const std::vector<uint8_t>& apdu, std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
   void Disconnect(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+  void Dispose(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+
+  // Releases hCard_ (if connected) and hContext_ (if established).
+  // Safe to call multiple times; sets handles to 0 after releasing.
+  void ReleaseContext();
 
   SCARDCONTEXT hContext_ = 0;
   SCARDHANDLE hCard_ = 0;
