@@ -33,4 +33,9 @@ class MethodChannelFlutterSmartCard extends FlutterSmartCardPlatform {
   Future<void> disconnect() async {
     await methodChannel.invokeMethod('disconnect');
   }
+
+  @override
+  Future<void> dispose() async {
+    await methodChannel.invokeMethod('dispose');
+  }
 }

@@ -22,6 +22,8 @@ void main() {
             return Uint8List.fromList([0x90, 0x00]);
           case 'disconnect':
             return null;
+          case 'dispose':
+            return null;
           default:
             return null;
         }
@@ -51,5 +53,9 @@ void main() {
 
   test('disconnect', () async {
     await platform.disconnect();
+  });
+
+  test('dispose', () async {
+    await platform.dispose();
   });
 }

@@ -149,6 +149,14 @@ class FlutterSmartCardPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 disconnect()
                 result.success(null)
             }
+            // On Android the USB connection is the only resource, so dispose and
+            // disconnect perform the same teardown. Exposed as a separate channel
+            // method so callers have a clear semantic for "done with the plugin"
+            // vs. "done with this card".
+            "dispose" -> {
+                disconnect()
+                result.success(null)
+            }
             else -> result.notImplemented()
         }
     }

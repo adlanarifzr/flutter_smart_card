@@ -18,4 +18,8 @@ class FlutterSmartCard {
   Future<void> disconnect() {
     return FlutterSmartCardPlatform.instance.disconnect();
   }
+
+  Future<void> dispose() {
+    return FlutterSmartCardPlatform.instance.dispose();
+  }
 }
