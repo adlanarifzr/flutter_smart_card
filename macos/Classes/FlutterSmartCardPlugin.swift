@@ -22,6 +22,8 @@ public class FlutterSmartCardPlugin: NSObject, FlutterPlugin {
             transmit(call: call, result: result)
         case "disconnect":
             disconnect(result: result)
+        case "dispose":
+            dispose(result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -92,11 +94,26 @@ public class FlutterSmartCardPlugin: NSObject, FlutterPlugin {
     }
 
     private func disconnect(result: @escaping FlutterResult) {
+        releaseAll()
+        result(nil)
+    }
+
+    // Fully tears down all PC/SC resources (card session and slot reference).
+    // On macOS the card session IS the only resource, so dispose and disconnect
+    // perform the same teardown. Exposed as a separate channel method so callers
+    // have a clear semantic for "done with the plugin" vs. "done with this card".
+    private func dispose(result: @escaping FlutterResult) {
+        releaseAll()
+        result(nil)
+    }
+
+    // Ends the card session and releases all held references.
+    // Safe to call multiple times.
+    private func releaseAll() {
         if let card = self.smartCard {
             card.endSession()
             self.smartCard = nil
             self.session = nil
         }
-        result(nil)
     }
 }
